@@ -65,16 +65,16 @@
         part
         (recur rest (+ accumulated-size (:size part)))))))
 
-(defn janky-hit
+;; for each part, add its size to the accumulated-size and return
+;; the part if the accumulated-size is greater than the target
+(defn hit-annoymous-function
+  "Hit one of the hobbits body parts."
   [asym-body-parts]
   (let [sym-parts (better-symmetrize-body-parts asym-body-parts)
         body-part-size-sum (reduce + 0 (map :size sym-parts))
         target (inc (rand body-part-size-sum))]
-    ((fn [accumulated-size target sym-parts]
+    ((fn [accumulated-size sym-parts]
        (let [[part & sym-parts] sym-parts]
          (if (> accumulated-size target)
            part
-           (recur (+ accumulated-size (:size part)) target sym-parts)))) 0 target sym-parts)))
-
-;; for each part, add its size to the accumulated-size and return
-;; the part if the accumulated-size is greater than the target
+           (recur (+ accumulated-size (:size part)) sym-parts)))) 0 sym-parts)))
